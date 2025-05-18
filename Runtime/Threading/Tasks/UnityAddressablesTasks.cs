@@ -54,11 +54,8 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
                 case AsyncOperationStatus.None:
                     var asyncOperationHandlePromise = cancellationToken.CanBeCanceled switch
                     {
-                        false => new AsyncOperationHandlePromise<object>(asyncOperationHandle.Convert<object>()),
-                        true => new AsyncOperationHandlePromiseWithCancellation<object>(
-                            asyncOperationHandle.Convert<object>(),
-                            cancellationToken
-                        )
+                        false => new AsyncOperationHandlePromise(asyncOperationHandle),
+                        true => new AsyncOperationHandlePromiseWithCancellation(asyncOperationHandle, cancellationToken)
                     };
                     return asyncOperationHandlePromise.Task;
                 case AsyncOperationStatus.Succeeded:
@@ -74,10 +71,10 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
         {
             internal AsyncOperationHandlePromise(AsyncOperationHandle asyncOperationHandle)
             {
-                asyncOperationHandle.Completed += Complete;
+                asyncOperationHandle.Completed += OnAsyncOperationComplete;
             }
 
-            private void Complete(AsyncOperationHandle asyncOperationHandle)
+            private void OnAsyncOperationComplete(AsyncOperationHandle asyncOperationHandle)
             {
                 switch (asyncOperationHandle.Status)
                 {
@@ -215,10 +212,10 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
         {
             internal AsyncOperationHandlePromise(AsyncOperationHandle<TObject> asyncOperationHandle)
             {
-                asyncOperationHandle.Completed += Complete;
+                asyncOperationHandle.Completed += OnAsyncOperationComplete;
             }
 
-            private void Complete(AsyncOperationHandle<TObject> asyncOperationHandle)
+            private void OnAsyncOperationComplete(AsyncOperationHandle<TObject> asyncOperationHandle)
             {
                 switch (asyncOperationHandle.Status)
                 {
