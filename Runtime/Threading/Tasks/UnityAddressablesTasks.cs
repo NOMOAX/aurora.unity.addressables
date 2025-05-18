@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Aurora.Threading;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Aurora.Unity.Addressables.Threading.Tasks
@@ -55,8 +54,11 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
                 case AsyncOperationStatus.None:
                     var asyncOperationHandlePromise = cancellationToken.CanBeCanceled switch
                     {
-                        false => new AsyncOperationHandlePromise(asyncOperationHandle),
-                        true => new AsyncOperationHandlePromiseWithCancellation(asyncOperationHandle, cancellationToken)
+                        false => new AsyncOperationHandlePromise<object>(asyncOperationHandle.Convert<object>()),
+                        true => new AsyncOperationHandlePromiseWithCancellation<object>(
+                            asyncOperationHandle.Convert<object>(),
+                            cancellationToken
+                        )
                     };
                     return asyncOperationHandlePromise.Task;
                 case AsyncOperationStatus.Succeeded:
@@ -70,41 +72,31 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
 
         private class AsyncOperationHandlePromise : TaskCompletionSource<VoidResult>
         {
-            private static readonly Action<Task, object> ActionComplete = Complete;
-
             internal AsyncOperationHandlePromise(AsyncOperationHandle asyncOperationHandle)
             {
-                TaskUtility.ContinueWithSynchronously(
-                    (Task) asyncOperationHandle.Task,
-                    ActionComplete,
-                    Tuple.Create(this, asyncOperationHandle)
-                );
+                asyncOperationHandle.Completed += Complete;
             }
 
-            private static void Complete(Task ancestor, object state)
+            private void Complete(AsyncOperationHandle asyncOperationHandle)
             {
-                var (asyncOperationHandlePromise, asyncOperationHandle) =
-                    (Tuple<AsyncOperationHandlePromise, AsyncOperationHandle>) state;
                 switch (asyncOperationHandle.Status)
                 {
                     case AsyncOperationStatus.None:
-                        if (asyncOperationHandlePromise.TrySetException(
-                                new ArgumentException("The operation is still in progress.")
-                            ))
+                        if (TrySetException(new ArgumentException("The operation is still in progress.")))
                         {
-                            asyncOperationHandlePromise.CleanUp();
+                            CleanUp();
                         }
                         break;
                     case AsyncOperationStatus.Succeeded:
-                        if (asyncOperationHandlePromise.TrySetResult(new VoidResult()))
+                        if (TrySetResult(new VoidResult()))
                         {
-                            asyncOperationHandlePromise.CleanUp();
+                            CleanUp();
                         }
                         break;
                     case AsyncOperationStatus.Failed:
-                        if (asyncOperationHandlePromise.TrySetException(asyncOperationHandle.OperationException))
+                        if (TrySetException(asyncOperationHandle.OperationException))
                         {
-                            asyncOperationHandlePromise.CleanUp();
+                            CleanUp();
                         }
                         break;
                     default:
@@ -221,41 +213,31 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
 
         private class AsyncOperationHandlePromise<TObject> : TaskCompletionSource<TObject>
         {
-            private static readonly Action<Task, object> ActionComplete = Complete;
-
             internal AsyncOperationHandlePromise(AsyncOperationHandle<TObject> asyncOperationHandle)
             {
-                TaskUtility.ContinueWithSynchronously(
-                    (Task) asyncOperationHandle.Task,
-                    ActionComplete,
-                    Tuple.Create(this, asyncOperationHandle)
-                );
+                asyncOperationHandle.Completed += Complete;
             }
 
-            private static void Complete(Task ancestor, object state)
+            private void Complete(AsyncOperationHandle<TObject> asyncOperationHandle)
             {
-                var (asyncOperationHandlePromise, asyncOperationHandle) =
-                    (Tuple<AsyncOperationHandlePromise<TObject>, AsyncOperationHandle<TObject>>) state;
                 switch (asyncOperationHandle.Status)
                 {
                     case AsyncOperationStatus.None:
-                        if (asyncOperationHandlePromise.TrySetException(
-                                new ArgumentException("The operation is still in progress.")
-                            ))
+                        if (TrySetException(new ArgumentException("The operation is still in progress.")))
                         {
-                            asyncOperationHandlePromise.CleanUp();
+                            CleanUp();
                         }
                         break;
                     case AsyncOperationStatus.Succeeded:
-                        if (asyncOperationHandlePromise.TrySetResult(asyncOperationHandle.Result))
+                        if (TrySetResult(asyncOperationHandle.Result))
                         {
-                            asyncOperationHandlePromise.CleanUp();
+                            CleanUp();
                         }
                         break;
                     case AsyncOperationStatus.Failed:
-                        if (asyncOperationHandlePromise.TrySetException(asyncOperationHandle.OperationException))
+                        if (TrySetException(asyncOperationHandle.OperationException))
                         {
-                            asyncOperationHandlePromise.CleanUp();
+                            CleanUp();
                         }
                         break;
                     default:
