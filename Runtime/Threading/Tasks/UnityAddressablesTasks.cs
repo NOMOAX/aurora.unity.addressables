@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Aurora.Threading;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Aurora.Unity.Addressables.Threading.Tasks
@@ -69,27 +70,41 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
 
         private class AsyncOperationHandlePromise : TaskCompletionSource<VoidResult>
         {
+            private static readonly Action<Task, object> ActionComplete = Complete;
+
             internal AsyncOperationHandlePromise(AsyncOperationHandle asyncOperationHandle)
             {
-                asyncOperationHandle.Completed += Completed;
+                TaskUtility.ContinueWithSynchronously(
+                    (Task) asyncOperationHandle.Task,
+                    ActionComplete,
+                    Tuple.Create(this, asyncOperationHandle)
+                );
             }
 
-            private void Completed(AsyncOperationHandle asyncOperationHandle)
+            private static void Complete(Task ancestor, object state)
             {
+                var (asyncOperationHandlePromise, asyncOperationHandle) =
+                    (Tuple<AsyncOperationHandlePromise, AsyncOperationHandle>) state;
                 switch (asyncOperationHandle.Status)
                 {
                     case AsyncOperationStatus.None:
-                        throw new ArgumentException("The operation is still in progress.");
-                    case AsyncOperationStatus.Succeeded:
-                        if (TrySetResult(new VoidResult()))
+                        if (asyncOperationHandlePromise.TrySetException(
+                                new ArgumentException("The operation is still in progress.")
+                            ))
                         {
-                            CleanUp();
+                            asyncOperationHandlePromise.CleanUp();
+                        }
+                        break;
+                    case AsyncOperationStatus.Succeeded:
+                        if (asyncOperationHandlePromise.TrySetResult(new VoidResult()))
+                        {
+                            asyncOperationHandlePromise.CleanUp();
                         }
                         break;
                     case AsyncOperationStatus.Failed:
-                        if (TrySetException(asyncOperationHandle.OperationException))
+                        if (asyncOperationHandlePromise.TrySetException(asyncOperationHandle.OperationException))
                         {
-                            CleanUp();
+                            asyncOperationHandlePromise.CleanUp();
                         }
                         break;
                     default:
@@ -104,7 +119,7 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
 
         private sealed class AsyncOperationHandlePromiseWithCancellation : AsyncOperationHandlePromise
         {
-            private static readonly Action<object> ActionCompleteCanceled = CompleteCanceled;
+            private static readonly Action<object> ActionCancel = Cancel;
 
             private CancellationTokenRegistration _cancellationTokenRegistration;
 
@@ -113,7 +128,7 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
                 CancellationToken    cancellationToken) : base(asyncOperationHandle)
             {
                 _cancellationTokenRegistration = cancellationToken.Register(
-                    ActionCompleteCanceled,
+                    ActionCancel,
                     Tuple.Create(this, cancellationToken)
                 );
                 if (Task.IsCompleted)
@@ -122,7 +137,7 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
                 }
             }
 
-            private static void CompleteCanceled(object state)
+            private static void Cancel(object state)
             {
                 var (asyncOperationHandlePromiseWithCancellation, cancellationToken) =
                     (Tuple<AsyncOperationHandlePromiseWithCancellation, CancellationToken>) state;
@@ -206,27 +221,41 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
 
         private class AsyncOperationHandlePromise<TObject> : TaskCompletionSource<TObject>
         {
+            private static readonly Action<Task, object> ActionComplete = Complete;
+
             internal AsyncOperationHandlePromise(AsyncOperationHandle<TObject> asyncOperationHandle)
             {
-                asyncOperationHandle.Completed += Complete;
+                TaskUtility.ContinueWithSynchronously(
+                    (Task) asyncOperationHandle.Task,
+                    ActionComplete,
+                    Tuple.Create(this, asyncOperationHandle)
+                );
             }
 
-            private void Complete(AsyncOperationHandle<TObject> asyncOperationHandle)
+            private static void Complete(Task ancestor, object state)
             {
+                var (asyncOperationHandlePromise, asyncOperationHandle) =
+                    (Tuple<AsyncOperationHandlePromise<TObject>, AsyncOperationHandle<TObject>>) state;
                 switch (asyncOperationHandle.Status)
                 {
                     case AsyncOperationStatus.None:
-                        throw new ArgumentException("The operation is still in progress.");
-                    case AsyncOperationStatus.Succeeded:
-                        if (TrySetResult(asyncOperationHandle.Result))
+                        if (asyncOperationHandlePromise.TrySetException(
+                                new ArgumentException("The operation is still in progress.")
+                            ))
                         {
-                            CleanUp();
+                            asyncOperationHandlePromise.CleanUp();
+                        }
+                        break;
+                    case AsyncOperationStatus.Succeeded:
+                        if (asyncOperationHandlePromise.TrySetResult(asyncOperationHandle.Result))
+                        {
+                            asyncOperationHandlePromise.CleanUp();
                         }
                         break;
                     case AsyncOperationStatus.Failed:
-                        if (TrySetException(asyncOperationHandle.OperationException))
+                        if (asyncOperationHandlePromise.TrySetException(asyncOperationHandle.OperationException))
                         {
-                            CleanUp();
+                            asyncOperationHandlePromise.CleanUp();
                         }
                         break;
                     default:
@@ -241,7 +270,7 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
 
         private sealed class AsyncOperationHandlePromiseWithCancellation<TObject> : AsyncOperationHandlePromise<TObject>
         {
-            private static readonly Action<object> ActionCompleteCanceled = CompleteCanceled;
+            private static readonly Action<object> ActionCancel = Cancel;
 
             private CancellationTokenRegistration _cancellationTokenRegistration;
 
@@ -250,7 +279,7 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
                 CancellationToken             cancellationToken) : base(asyncOperationHandle)
             {
                 _cancellationTokenRegistration = cancellationToken.Register(
-                    ActionCompleteCanceled,
+                    ActionCancel,
                     Tuple.Create(this, cancellationToken)
                 );
                 if (Task.IsCompleted)
@@ -259,7 +288,7 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
                 }
             }
 
-            private static void CompleteCanceled(object state)
+            private static void Cancel(object state)
             {
                 var (asyncOperationHandlePromiseWithCancellation, cancellationToken) =
                     (Tuple<AsyncOperationHandlePromiseWithCancellation<TObject>, CancellationToken>) state;
