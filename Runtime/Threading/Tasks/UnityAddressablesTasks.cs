@@ -110,7 +110,7 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
         {
             private static readonly Action<object> ActionCancel = Cancel;
 
-            private CancellationTokenRegistration _cancellationTokenRegistration;
+            private readonly CancellationTokenRegistration _cancellationTokenRegistration;
 
             internal AsyncOperationHandlePromiseWithCancellation(
                 AsyncOperationHandle asyncOperationHandle,
@@ -251,7 +251,7 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
         {
             private static readonly Action<object> ActionCancel = Cancel;
 
-            private CancellationTokenRegistration _cancellationTokenRegistration;
+            private readonly CancellationTokenRegistration _cancellationTokenRegistration;
 
             internal AsyncOperationHandlePromiseWithCancellation(
                 AsyncOperationHandle<TObject> asyncOperationHandle,
