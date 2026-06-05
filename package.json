@@ -2,7 +2,7 @@
   "name": "com.kevin-games.aurora.unity.addressables",
   "displayName": "Aurora Unity Addressables",
   "version": "1.0.0",
-  "unity": "2020.3",
+  "unity": "2021.2",
   "description": "High-performance, low-memory-consumption toolkit for Unity Addressables.\n\nDependencies:\n- Aurora (https://gitee.com/kevin-games/aurora_unitypackage.git)\n- Addressables",
   "keywords": [
     "aurora"
