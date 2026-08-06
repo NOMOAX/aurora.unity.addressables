@@ -3,7 +3,7 @@
   "displayName": "Aurora Unity Addressables",
   "version": "1.0.0",
   "unity": "2021.2",
-  "description": "High-performance, low-memory-consumption toolkit for Unity Addressables.\n\nDependencies:\n- Aurora (https://gitee.com/kevin-games/aurora_unitypackage.git)\n- Addressables",
+  "description": "High-performance, low-memory-consumption toolkit for Unity Addressables.\n\nDependencies:\n- Aurora (https://gitee.com/kevin-games/aurora_unitypackage.git)\n- Addressable Assets",
   "keywords": [
     "aurora"
   ],
