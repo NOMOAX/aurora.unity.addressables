@@ -129,7 +129,7 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
             private static void Cancel(object state)
             {
                 var (asyncOperationHandlePromiseWithCancellation, cancellationToken) =
-                    (Tuple<AsyncOperationHandlePromiseWithCancellation, CancellationToken>) state;
+                    (Tuple<AsyncOperationHandlePromiseWithCancellation, CancellationToken>)state;
                 if (asyncOperationHandlePromiseWithCancellation.TrySetCanceled(cancellationToken))
                 {
                     asyncOperationHandlePromiseWithCancellation.CleanUp();
@@ -270,7 +270,7 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
             private static void Cancel(object state)
             {
                 var (asyncOperationHandlePromiseWithCancellation, cancellationToken) =
-                    (Tuple<AsyncOperationHandlePromiseWithCancellation<TObject>, CancellationToken>) state;
+                    (Tuple<AsyncOperationHandlePromiseWithCancellation<TObject>, CancellationToken>)state;
                 if (asyncOperationHandlePromiseWithCancellation.TrySetCanceled(cancellationToken))
                 {
                     asyncOperationHandlePromiseWithCancellation.CleanUp();

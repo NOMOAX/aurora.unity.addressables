@@ -48,7 +48,7 @@ namespace Aurora.Unity.Addressables.CompilerServices
 
         private readonly struct Awaiter : IAwaiter<TObject>
         {
-            private static readonly Action<Task<TObject>, object> RunAction = (_, state) => ((Action) state)();
+            private static readonly Action<Task<TObject>, object> RunAction = (_, state) => ((Action)state)();
 
             private readonly Task<TObject> _task;
 
