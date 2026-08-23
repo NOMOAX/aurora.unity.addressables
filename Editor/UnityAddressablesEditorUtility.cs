@@ -8,12 +8,12 @@ using UnityEngine.AddressableAssets;
 namespace Aurora.UnityEditor.Addressables.Editor
 {
     /// <summary>
-    /// 编辑器工具集。
+    /// Editor utility set.
     /// </summary>
     public static class UnityAddressablesEditorUtility
     {
         /// <summary>
-        /// 播放模式索引。
+        /// Play mode index.
         /// </summary>
         public static int PlayModeIndex
         {
@@ -22,7 +22,7 @@ namespace Aurora.UnityEditor.Addressables.Editor
         }
 
         /// <summary>
-        /// 播放模式名称。
+        /// Play mode name.
         /// </summary>
         public static string PlayModeName
         {

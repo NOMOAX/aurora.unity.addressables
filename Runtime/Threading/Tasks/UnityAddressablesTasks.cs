@@ -6,30 +6,30 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 namespace Aurora.Unity.Addressables.Threading.Tasks
 {
     /// <summary>
-    /// 提供一组返回值为 <see cref="Task"/> 或 <see cref="Task{TResult}"/> 的方法。
+    /// Provides a set of methods that return <see cref="Task"/> or <see cref="Task{TResult}"/>.
     /// </summary>
     public static class UnityAddressablesTasks
     {
         #region AsyncOperationHandle
 
         /// <summary>
-        /// 创建一个任务，该任务将在 <see cref="AsyncOperationHandle"/> 完成时完成。
+        /// Creates a task that completes when <see cref="AsyncOperationHandle"/> completes.
         /// </summary>
-        /// <param name="asyncOperationHandle">异步操作句柄。</param>
-        /// <returns>在 <paramref name="asyncOperationHandle"/> 完成时完成的任务。</returns>
-        /// <exception cref="ArgumentException"><paramref name="asyncOperationHandle"/> 非法。</exception>
+        /// <param name="asyncOperationHandle">The asynchronous operation handle.</param>
+        /// <returns>A task that completes when <paramref name="asyncOperationHandle"/> completes.</returns>
+        /// <exception cref="ArgumentException"><paramref name="asyncOperationHandle"/> is invalid.</exception>
         public static Task WhenAsyncOperationHandle(AsyncOperationHandle asyncOperationHandle)
         {
             return InternalWhenAsyncOperationHandle(asyncOperationHandle, CancellationToken.None);
         }
 
         /// <summary>
-        /// 创建一个任务，该任务将在 <see cref="AsyncOperationHandle"/> 完成时完成。
+        /// Creates a task that completes when <see cref="AsyncOperationHandle"/> completes.
         /// </summary>
-        /// <param name="asyncOperationHandle">异步操作句柄。</param>
-        /// <param name="cancellationToken">取消令牌。</param>
-        /// <returns>在 <paramref name="asyncOperationHandle"/> 完成或者 <paramref name="cancellationToken"/> 发出取消请求时完成的任务。</returns>
-        /// <exception cref="ArgumentException"><paramref name="asyncOperationHandle"/> 非法。</exception>
+        /// <param name="asyncOperationHandle">The asynchronous operation handle.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task that completes when <paramref name="asyncOperationHandle"/> completes or <paramref name="cancellationToken"/> requests cancellation.</returns>
+        /// <exception cref="ArgumentException"><paramref name="asyncOperationHandle"/> is invalid.</exception>
         public static Task WhenAsyncOperationHandle(
             AsyncOperationHandle asyncOperationHandle,
             CancellationToken    cancellationToken)
@@ -148,12 +148,12 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
         #region AsyncOperationHandle<TObject>
 
         /// <summary>
-        /// 创建一个任务，该任务将在 <see cref="AsyncOperationHandle{TObject}"/> 完成时完成。
+        /// Creates a task that completes when <see cref="AsyncOperationHandle{TObject}"/> completes.
         /// </summary>
-        /// <param name="asyncOperationHandle">带有结果的异步操作句柄。</param>
-        /// <typeparam name="TObject">异步操作的结果的类型。</typeparam>
-        /// <returns>在 <paramref name="asyncOperationHandle"/> 完成时完成的任务。</returns>
-        /// <exception cref="ArgumentException"><paramref name="asyncOperationHandle"/> 非法。</exception>
+        /// <param name="asyncOperationHandle">The asynchronous operation handle carrying a result.</param>
+        /// <typeparam name="TObject">The type of the asynchronous operation result.</typeparam>
+        /// <returns>A task that completes when <paramref name="asyncOperationHandle"/> completes.</returns>
+        /// <exception cref="ArgumentException"><paramref name="asyncOperationHandle"/> is invalid.</exception>
         public static Task<TObject> WhenAsyncOperationHandle<TObject>(
             AsyncOperationHandle<TObject> asyncOperationHandle)
         {
@@ -161,13 +161,13 @@ namespace Aurora.Unity.Addressables.Threading.Tasks
         }
 
         /// <summary>
-        /// 创建一个任务，该任务将在 <see cref="AsyncOperationHandle{TObject}"/> 完成时完成。
+        /// Creates a task that completes when <see cref="AsyncOperationHandle{TObject}"/> completes.
         /// </summary>
-        /// <param name="asyncOperationHandle">带有结果的异步操作句柄。</param>
-        /// <param name="cancellationToken">取消令牌。</param>
-        /// <typeparam name="TObject">异步操作的结果的类型。</typeparam>
-        /// <returns>在 <paramref name="asyncOperationHandle"/> 完成或者 <paramref name="cancellationToken"/> 发出取消请求时完成的任务。</returns>
-        /// <exception cref="ArgumentException"><paramref name="asyncOperationHandle"/> 非法。</exception>
+        /// <param name="asyncOperationHandle">The asynchronous operation handle carrying a result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <typeparam name="TObject">The type of the asynchronous operation result.</typeparam>
+        /// <returns>A task that completes when <paramref name="asyncOperationHandle"/> completes or <paramref name="cancellationToken"/> requests cancellation.</returns>
+        /// <exception cref="ArgumentException"><paramref name="asyncOperationHandle"/> is invalid.</exception>
         public static Task<TObject> WhenAsyncOperationHandle<TObject>(
             AsyncOperationHandle<TObject> asyncOperationHandle,
             CancellationToken             cancellationToken)

@@ -9,7 +9,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 namespace Aurora.Unity.Addressables.CompilerServices
 {
     /// <summary>
-    /// 提供用于切换到目标 <see cref="AsyncOperationHandle{TObject}"/> 执行完毕时的可等待上下文。
+    /// Provides an awaitable context that switches to the target <see cref="AsyncOperationHandle{TObject}"/> upon completion.
     /// </summary>
     public readonly struct AsyncOperationHandleAwaitable<TObject> : IAwaitable<TObject>
     {
@@ -18,9 +18,9 @@ namespace Aurora.Unity.Addressables.CompilerServices
         private readonly CancellationToken _cancellationToken;
 
         /// <summary>
-        /// 初始化 <see cref="AsyncOperationHandleAwaitable{TObject}"/> 结构的新实例。
+        /// Initializes a new instance of the <see cref="AsyncOperationHandleAwaitable{TObject}"/> structure.
         /// </summary>
-        /// <param name="asyncOperationHandle">带有结果的异步操作句柄。</param>
+        /// <param name="asyncOperationHandle">The asynchronous operation handle carrying a result.</param>
         public AsyncOperationHandleAwaitable(AsyncOperationHandle<TObject> asyncOperationHandle)
         {
             _asyncOperationHandle = asyncOperationHandle;
@@ -28,10 +28,10 @@ namespace Aurora.Unity.Addressables.CompilerServices
         }
 
         /// <summary>
-        /// 初始化 <see cref="AsyncOperationHandleAwaitable{TObject}"/> 结构的新实例。
+        /// Initializes a new instance of the <see cref="AsyncOperationHandleAwaitable{TObject}"/> structure.
         /// </summary>
-        /// <param name="asyncOperationHandle">带有结果的异步操作句柄。</param>
-        /// <param name="cancellationToken">取消令牌。</param>
+        /// <param name="asyncOperationHandle">The asynchronous operation handle carrying a result.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         public AsyncOperationHandleAwaitable(
             AsyncOperationHandle<TObject> asyncOperationHandle,
             CancellationToken             cancellationToken)
