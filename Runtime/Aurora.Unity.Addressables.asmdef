@@ -1,0 +1,18 @@
+{
+    "name": "Aurora.Unity.Addressables",
+    "rootNamespace": "Aurora.Unity.Addressables",
+    "references": [
+        "Aurora",
+        "Unity.Addressables",
+        "Unity.ResourceManager"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
