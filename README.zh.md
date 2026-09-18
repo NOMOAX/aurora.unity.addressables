@@ -1,7 +1,7 @@
 # Aurora Unity Addressables
 
 ![许可](https://img.shields.io/github/license/NOMOAX/aurora.unity.addressables)
-![版本](https://img.shields.io/badge/version-1.0.3-blue)
+![版本](https://img.shields.io/badge/version-1.0.4-blue)
 ![最低 Unity 版本](https://img.shields.io/badge/Unity-2021.2%2B-blue)
 
 使用基于任务的异步模式（Task-based asynchronous pattern）封装 Unity Addressables 的 `AsyncOperationHandle` 异步模型。

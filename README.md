@@ -1,7 +1,7 @@
 # Aurora Unity Addressables
 
 ![license](https://img.shields.io/github/license/NOMOAX/aurora.unity.addressables)
-![version](https://img.shields.io/badge/version-1.0.3-blue)
+![version](https://img.shields.io/badge/version-1.0.4-blue)
 ![lowest Unity version](https://img.shields.io/badge/Unity-2021.2%2B-blue)
 
 Task-based asynchronous pattern (TAP) wrapper for Unity Addressables' `AsyncOperationHandle` async model.
