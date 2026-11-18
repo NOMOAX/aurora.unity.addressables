@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Build.DataBuilders;
@@ -15,28 +14,16 @@ namespace Aurora.UnityEditor.Addressables.Editor
         /// <summary>
         /// Play mode index.
         /// </summary>
-        public static int PlayModeIndex
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => ProjectConfigData.ActivePlayModeIndex;
-        }
+        public static int PlayModeIndex => ProjectConfigData.ActivePlayModeIndex;
 
         /// <summary>
         /// Play mode name.
         /// </summary>
-        public static string PlayModeName
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => GetPlayModeName(AddressableAssetSettingsDefaultObject.Settings.GetDataBuilder(PlayModeIndex));
-        }
+        public static string PlayModeName =>
+            GetPlayModeName(AddressableAssetSettingsDefaultObject.Settings.GetDataBuilder(PlayModeIndex));
 
-        private static string ActivePlatformName
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => PlatformMappingService.GetPlatformPathSubFolder();
-        }
+        private static string ActivePlatformName => PlatformMappingService.GetPlatformPathSubFolder();
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string GetPlayModeName(IDataBuilder dataBuilder)
         {
             return dataBuilder switch
